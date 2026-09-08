@@ -1,0 +1,6 @@
+{
+  "name": "genericMed",
+  "description": "Multi-tenant generic medicine marketplace comparing prices, automating pharmacy fulfillment, and managing compliance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
