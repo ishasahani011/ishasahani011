@@ -6,12 +6,13 @@ import { PharmacyHub } from './components/pharmacy/PharmacyHub';
 import { ScreensGallery } from './components/navigation/ScreensGallery';
 import { MissionControl } from './components/ops/MissionControl';
 import { ArchitectureView } from './components/docs/ArchitectureView';
+import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewMode>('showcase');
   const [pharmacyTab, setPharmacyTab] = useState<PharmacyTab>('pipeline');
 
-  const handleSelectMobileScreen = (screen: 'compare' | 'rx-upload' | 'order-tracking') => {
+  const handleSelectMobileScreen = (screen: 'compare' | 'rx-upload' | 'order-tracking' | 'auth') => {
     setCurrentView('mobile');
   };
 
@@ -26,39 +27,41 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#eff4ff] text-[#0b1c30] font-sans antialiased selection:bg-[#86f2e4] selection:text-[#006f66]">
-      {/* Top Application Header */}
-      <TopBar 
-        currentView={currentView}
-        onViewChange={setCurrentView}
-        onOpenInspector={handleOpenInspector}
-      />
+    <AuthProvider>
+      <div className="flex flex-col min-h-screen bg-[#eff4ff] text-[#0b1c30] font-sans antialiased selection:bg-[#86f2e4] selection:text-[#006f66]">
+        {/* Top Application Header */}
+        <TopBar 
+          currentView={currentView}
+          onViewChange={setCurrentView}
+          onOpenInspector={handleOpenInspector}
+        />
 
-      {/* Main View Area */}
-      <main className="flex-1 flex flex-col">
-        {currentView === 'showcase' && (
-          <ScreensGallery 
-            onSelectMobileScreen={handleSelectMobileScreen}
-            onSelectPharmacyScreen={handleSelectPharmacyScreen}
-          />
-        )}
+        {/* Main View Area */}
+        <main className="flex-1 flex flex-col">
+          {currentView === 'showcase' && (
+            <ScreensGallery 
+              onSelectMobileScreen={handleSelectMobileScreen}
+              onSelectPharmacyScreen={handleSelectPharmacyScreen}
+            />
+          )}
 
-        {currentView === 'mobile' && (
-          <MobileShell />
-        )}
+          {currentView === 'mobile' && (
+            <MobileShell />
+          )}
 
-        {currentView === 'pharmacy' && (
-          <PharmacyHub initialTab={pharmacyTab} />
-        )}
+          {currentView === 'pharmacy' && (
+            <PharmacyHub initialTab={pharmacyTab} />
+          )}
 
-        {currentView === 'ops' && (
-          <MissionControl />
-        )}
+          {currentView === 'ops' && (
+            <MissionControl />
+          )}
 
-        {currentView === 'architecture' && (
-          <ArchitectureView />
-        )}
-      </main>
-    </div>
+          {currentView === 'architecture' && (
+            <ArchitectureView />
+          )}
+        </main>
+      </div>
+    </AuthProvider>
   );
 }

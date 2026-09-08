@@ -1,6 +1,6 @@
 {
   "name": "genericMed",
-  "description": "Multi-tenant generic medicine marketplace comparing prices, automating pharmacy fulfillment, and managing compliance.",
+  "description": "Multi-tenant generic medicine marketplace comparing prices, automating pharmacy fulfillment, tracking adherence with D3 Compliance Center, and managing DEA/CSOS compliance.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

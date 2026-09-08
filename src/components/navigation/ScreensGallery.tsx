@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 interface ScreensGalleryProps {
-  onSelectMobileScreen: (screen: 'compare' | 'rx-upload' | 'order-tracking') => void;
+  onSelectMobileScreen: (screen: 'compare' | 'rx-upload' | 'order-tracking' | 'auth') => void;
   onSelectPharmacyScreen: (tab: PharmacyTab) => void;
 }
 
@@ -26,7 +26,7 @@ export const ScreensGallery: React.FC<ScreensGalleryProps> = ({
 }) => {
   const patientScreens = [
     {
-      id: 'compare',
+      id: 'compare' as const,
       title: 'Mobile Price Compare & Buy-Box Marketplace',
       screenNum: 'Screen 1',
       description: 'Interactive dosage (10mg/20mg/40mg) and duration selectors (30d/60d/90d), generic savings meter ($132.80 saved), brand vs generic comparison, and local pharmacy offer cards.',
@@ -34,7 +34,7 @@ export const ScreensGallery: React.FC<ScreensGalleryProps> = ({
       badge: 'Best Value'
     },
     {
-      id: 'rx-upload',
+      id: 'rx-upload' as const,
       title: 'Rx Prescription Upload & OCR Verification',
       screenNum: 'Screen 2',
       description: 'Camera scanner & PDF upload, Rx transfer from major chains (Walgreens, CVS), OCR field extraction with confidence scores (99.8%), and prescriber lookup.',
@@ -42,12 +42,20 @@ export const ScreensGallery: React.FC<ScreensGalleryProps> = ({
       badge: 'Interactive Scan'
     },
     {
-      id: 'order-tracking',
+      id: 'order-tracking' as const,
       title: 'Live Cold-Chain & Courier Order Tracking',
       screenNum: 'Screen 3',
       description: 'Live interactive map view with GPS courier driver (Derrick Ramos), step progress tracker, real-time IoT cold-chain logger (41.2°F nominal), and tamper seal verification.',
       tags: ['Patient App', 'GPS Courier', 'Sensitech IoT', 'Tamper Seal'],
       badge: 'Real-Time'
+    },
+    {
+      id: 'auth' as const,
+      title: 'Patient Account, Login & Registration',
+      screenNum: 'Screen 4',
+      description: 'Patient authentication portal with email/password, new account registration (insurance carrier, member ID, Rx savings card enrollment), and quick demo persona switching.',
+      tags: ['Patient App', 'Auth & Registration', 'Demo Personas', 'Rx Savings Card'],
+      badge: 'Auth Portal'
     }
   ];
 
@@ -58,7 +66,15 @@ export const ScreensGallery: React.FC<ScreensGalleryProps> = ({
       screenNum: 'Screen 5',
       description: 'Station 04 live kanban across Intake & Verification, Pill Dispense & Vision AI pill counter (30/30 count), Tamper Seal & Cold-Chain Pack, and Courier Manifest handoff.',
       tags: ['Station 04', 'Vision AI', 'Barcode Scan', '4-Stage Kanban'],
-      badge: 'NABP Sec 7.2'
+      badge: 'Live Operations'
+    },
+    {
+      tab: 'auth' as PharmacyTab,
+      title: 'Pharmacy Staff Credentials & Station Enrollment',
+      screenNum: 'Screen 11',
+      description: 'Pharmacist-in-Charge (PIC) & Technician authentication, DEA 21 CFR § 1311 CSOS cryptographic signing, and state board permit & cold-vault station registration.',
+      tags: ['Station 04', 'Staff Auth & Reg', 'DEA CSOS Signing', 'NABP Accredited'],
+      badge: 'Auth & Station Reg'
     },
     {
       tab: 'catalog' as PharmacyTab,

@@ -7,6 +7,7 @@ import { StockAlerts } from './StockAlerts';
 import { ParReorderEngine } from './ParReorderEngine';
 import { InvoiceReconciliation } from './InvoiceReconciliation';
 import { DeaAuditLog } from './DeaAuditLog';
+import { PharmacyAuthScreen } from './PharmacyAuthScreen';
 
 interface PharmacyHubProps {
   initialTab?: PharmacyTab;
@@ -38,6 +39,9 @@ export const PharmacyHub: React.FC<PharmacyHubProps> = ({ initialTab = 'pipeline
       {/* Main Screen Content Viewport */}
       <main className="flex-1 overflow-y-auto p-4 lg:p-6 no-scrollbar">
         <div className="max-w-7xl mx-auto pb-12">
+          {activeTab === 'auth' && (
+            <PharmacyAuthScreen onSuccess={() => setActiveTab('pipeline')} />
+          )}
           {activeTab === 'pipeline' && <FulfillmentPipeline />}
           {activeTab === 'catalog' && <CatalogPricing />}
           {activeTab === 'stock-alerts' && <StockAlerts />}

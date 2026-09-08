@@ -5,7 +5,7 @@ export type ViewMode =
   | 'ops' 
   | 'architecture';
 
-export type MobileTab = 'search' | 'compare' | 'rx' | 'cart' | 'orders';
+export type MobileTab = 'search' | 'compare' | 'rx' | 'cart' | 'orders' | 'account';
 
 export type PharmacyTab = 
   | 'pipeline' 
@@ -13,7 +13,52 @@ export type PharmacyTab =
   | 'stock-alerts' 
   | 'par-rules' 
   | 'reconciliation' 
-  | 'dea-audit';
+  | 'dea-audit'
+  | 'auth';
+
+export interface PatientProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  dob: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+  insurancePreference: 'cash' | 'commercial' | 'medicare';
+  knownAllergies: string;
+  rxCount: number;
+  isVerified: boolean;
+}
+
+export interface PharmacyStaffProfile {
+  id: string;
+  fullName: string;
+  role: 'PIC' | 'Staff Pharmacist' | 'Lead Tech' | 'Compliance Officer';
+  licenseNumber: string;
+  deaNumber: string;
+  npiNumber: string;
+  stationId: string;
+  stationName: string;
+  csosCertified: boolean;
+  twoFactorActive: boolean;
+  email: string;
+}
+
+export interface OpsOperatorProfile {
+  id: string;
+  fullName: string;
+  organization: string;
+  badgeId: string;
+  clearanceTier: 'Tier 1' | 'Tier 2' | 'Tier 3';
+  roleTitle: string;
+  agency: string;
+  mfaMethod: 'TOTP' | 'FIDO2' | 'YubiKey';
+  lastLogin: string;
+}
 
 export interface MedicineOffer {
   id: string;

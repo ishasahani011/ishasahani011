@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { MobilePriceCompare } from './MobilePriceCompare';
 import { MobileRxUpload } from './MobileRxUpload';
 import { MobileOrderTracking } from './MobileOrderTracking';
-import { MedicineOffer } from '../../types';
+import { MobileAuthScreen } from './MobileAuthScreen';
+import { MedicineOffer, MobileTab } from '../../types';
 import { INITIAL_OFFERS } from '../../data/mockData';
+import { useAuth } from '../../context/AuthContext';
 import { 
   Search, 
   ArrowLeftRight, 
@@ -12,12 +14,15 @@ import {
   Receipt, 
   Wifi, 
   BatteryMedium, 
-  Signal 
+  Signal,
+  User,
+  ShieldCheck
 } from 'lucide-react';
 
 export const MobileShell: React.FC = () => {
-  const [currentScreen, setCurrentScreen] = useState<'compare' | 'rx-upload' | 'order-tracking'>('compare');
-  const [activeTab, setActiveTab] = useState<'search' | 'compare' | 'rx' | 'cart' | 'orders'>('compare');
+  const { patientUser } = useAuth();
+  const [currentScreen, setCurrentScreen] = useState<'compare' | 'rx-upload' | 'order-tracking' | 'auth'>('compare');
+  const [activeTab, setActiveTab] = useState<MobileTab>('compare');
   const [selectedOffer, setSelectedOffer] = useState<MedicineOffer>(INITIAL_OFFERS[0]);
   const [selectedDosage, setSelectedDosage] = useState('20mg');
   const [selectedDuration, setSelectedDuration] = useState(30);
@@ -35,7 +40,7 @@ export const MobileShell: React.FC = () => {
     setActiveTab('orders');
   };
 
-  const handleTabChange = (tab: 'search' | 'compare' | 'rx' | 'cart' | 'orders') => {
+  const handleTabChange = (tab: MobileTab) => {
     setActiveTab(tab);
     if (tab === 'compare' || tab === 'search') {
       setCurrentScreen('compare');
@@ -45,6 +50,8 @@ export const MobileShell: React.FC = () => {
       setCurrentScreen('order-tracking');
     } else if (tab === 'cart') {
       setCurrentScreen('compare');
+    } else if (tab === 'account') {
+      setCurrentScreen('auth');
     }
   };
 
@@ -53,14 +60,23 @@ export const MobileShell: React.FC = () => {
       {/* Phone Hardware Shell */}
       <div className="w-full max-w-[420px] bg-[#001729] rounded-[3rem] p-3.5 shadow-2xl ring-8 ring-[#001729]/20 flex flex-col relative overflow-hidden">
         {/* Hardware Dynamic Island & Status Bar */}
-        <div className="bg-[#f8f9ff] pt-3 px-6 pb-2 rounded-t-[2.4rem] flex items-center justify-between text-xs font-semibold text-[#001729] select-none border-b border-[#e5eeff]/40">
+        <div className="bg-[#f8f9ff] pt-3 px-5 pb-2 rounded-t-[2.4rem] flex items-center justify-between text-xs font-semibold text-[#001729] select-none border-b border-[#e5eeff]/40">
           <span className="font-mono text-[13px] font-bold">9:41</span>
 
-          {/* Dynamic Island Pill */}
-          <div className="w-24 h-5 bg-black rounded-full flex items-center justify-center gap-1.5 px-2">
-            <span className="w-2 h-2 rounded-full bg-[#006a61]"></span>
-            <span className="text-[9px] font-mono text-[#89f5e7] font-bold tracking-tight">Rx 5:30PM</span>
-          </div>
+          {/* Dynamic Island Pill / Quick Account Toggle */}
+          <button
+            onClick={() => {
+              setCurrentScreen('auth');
+              setActiveTab('account');
+            }}
+            className="h-6 bg-black rounded-full flex items-center justify-center gap-1.5 px-3 hover:bg-black/90 transition-all text-left"
+            title="Open Patient Account / Login & Register"
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${patientUser ? 'bg-[#89f5e7]' : 'bg-[#ffdad6] animate-pulse'}`}></span>
+            <span className="text-[9px] font-mono text-[#89f5e7] font-bold tracking-tight truncate max-w-[95px]">
+              {patientUser ? patientUser.fullName.split(' ')[0] : 'Sign In'}
+            </span>
+          </button>
 
           <div className="flex items-center gap-1.5 text-[#001729]">
             <Signal className="w-3.5 h-3.5" />
@@ -71,6 +87,15 @@ export const MobileShell: React.FC = () => {
 
         {/* Inner Scrollable Screen Content */}
         <div className="bg-[#f8f9ff] h-[680px] overflow-y-auto no-scrollbar relative flex flex-col">
+          {currentScreen === 'auth' && (
+            <MobileAuthScreen 
+              onSuccess={() => {
+                setCurrentScreen('compare');
+                setActiveTab('compare');
+              }}
+            />
+          )}
+
           {currentScreen === 'compare' && (
             <MobilePriceCompare 
               onProceedToRx={handleProceedToRx}
@@ -138,19 +163,6 @@ export const MobileShell: React.FC = () => {
           </button>
 
           <button 
-            onClick={() => handleTabChange('cart')}
-            className={`flex flex-col items-center gap-0.5 text-[10px] font-medium transition-colors relative ${
-              activeTab === 'cart' ? 'text-[#006a61] font-bold' : 'text-[#73777d]'
-            }`}
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Cart</span>
-            <span className="absolute -top-1 right-1 w-3.5 h-3.5 rounded-full bg-[#006a61] text-white font-mono text-[9px] flex items-center justify-center font-bold">
-              1
-            </span>
-          </button>
-
-          <button 
             onClick={() => handleTabChange('orders')}
             className={`flex flex-col items-center gap-0.5 text-[10px] font-medium transition-colors ${
               activeTab === 'orders' ? 'text-[#006a61] font-bold' : 'text-[#73777d]'
@@ -158,6 +170,19 @@ export const MobileShell: React.FC = () => {
           >
             <Receipt className="w-5 h-5" />
             <span>Orders</span>
+          </button>
+
+          <button 
+            onClick={() => handleTabChange('account')}
+            className={`flex flex-col items-center gap-0.5 text-[10px] font-medium transition-colors relative ${
+              activeTab === 'account' ? 'text-[#006a61] font-bold' : 'text-[#73777d]'
+            }`}
+          >
+            <User className="w-5 h-5" />
+            <span>Account</span>
+            {patientUser && (
+              <span className="absolute 0 top-0.5 right-2 w-1.5 h-1.5 rounded-full bg-[#006a61]"></span>
+            )}
           </button>
         </div>
 
